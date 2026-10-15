@@ -11,13 +11,18 @@ Gladys through
 [`@gladysassistant/integration-sdk`](https://github.com/GladysAssistant/integration-sdk-js),
 its only runtime dependency. It started from the official JavaScript template.
 
+This one brings the web radios of the [Radio Browser](https://www.radio-browser.info/)
+directory: search, favorites (one device each), a dashboard widget and scene
+actions that hand a stream address to the player of another integration.
+
 ## Commands
 
 ```bash
 npm install
 npm test                                  # node --test, the built-in runner
 node --test test/devices.test.js          # one file
-node --test --test-name-pattern "plug"    # tests whose name matches
+node --test --test-name-pattern "FIP"     # tests whose name matches
+node scripts/probe.mjs                    # live read-only check of the directory (network)
 npm run lint                              # ESLint
 npm run format:check                      # Prettier, as the CI runs it
 npm run format                            # Prettier, fix in place
@@ -31,16 +36,25 @@ pushing.
 ## Architecture
 
 ```
-index.js                          SDK wiring only: handlers registered before connect()
-src/devices/index.js              registry of the device blueprints + dispatch helpers
-src/devices/<type>.js             one device type per file (buildDevice, onPoll, onSetValue...)
-src/scenes.js                     scene action handlers (manifest `scene_actions`)
-src/widgets.js                    dashboard widget handlers (manifest `widgets`)
+index.js                          SDK wiring only: store loaded, createApp(), connect()
+src/app.js                        every handler wired to a Gladys client (real or the SDK's fake)
+src/radiobrowser.js               API client: DNS servers + failover, search, byuuid, click
+src/favorites.js                  /data/favorites.json (atomic writes), last known copy of each station
+src/devices/station.js            the one device type: buildDevice, stationStates, feature NAMES
+src/refresher.js                  internal refresh timer + onPoll fallback (Gladys#3198)
+src/actions.js                    manifest actions: search, add_favorite, list_favorites, remove_favorite
+src/scenes.js                     scene actions: get_stream, random_station
+src/widgets.js                    the "favorites" widget (card-list)
+src/logos.js                      station logos for the widget (onWidgetGetImage), checked first
+src/net.js                        loggableUrl, public-only downloads (no LAN fetch from a logo URL)
+src/messages.js, src/i18n.js      every user text in en/fr/de/es
+src/issues.js                     a repeated failure logged once, and once on recovery
 src/config.js                     DEFAULT_CONFIG (mirrors the manifest defaults) + normalization
-src/weather.js                    example driver (Open-Meteo)
+scripts/probe.mjs                 live read-only probe of the directory (not in the image)
 gladys-assistant-integration.json manifest: name, config_schema, actions, image...
-docs/en.md, docs/fr.md            user documentation, re-hosted by Gladys (mandatory)
-test/                             node --test, against the SDK's fake Gladys (integration-sdk/testing)
+docs/{en,fr,de,es}.md             user documentation, re-hosted by Gladys (same sections)
+test/                             node --test, against the SDK's fake Gladys and a fake directory
+test/fixtures/radio-browser/      real API answers (python-radios, MIT) + FIP/France Inter searches
 .github/scripts/release.mjs       release helpers (manifest bump, changelog), tested in test/
 ```
 
@@ -62,7 +76,7 @@ test/                             node --test, against the SDK's fake Gladys (in
   in `CHANGELOG.md` (`### Added`, `Changed`, `Fixed`, `Removed`, `Security`).
   Never write a version heading: the Release workflow moves the section, and it
   becomes the notes of the GitHub Release.
-- **Manifest.** Texts are multi-language objects `{ "en": ..., "fr": ... }`:
+- **Manifest.** Texts are multi-language objects `{ "en", "fr", "de", "es" }`:
   `label`, `description` and `placeholder` alike, never a plain string. The
   catalog `description` holds 10 to 100 characters per language. A field the
   older cores do not know needs a higher `gladys_version` minimum
@@ -70,10 +84,60 @@ test/                             node --test, against the SDK's fake Gladys (in
   `type: "provider"`: 5.1.0). `test/manifest.test.js` ties the manifest to the
   code (defaults, action, scene and widget handlers): change both sides
   together.
-- **User-facing text** is bilingual (English and French): action messages,
-  manifest texts, and `docs/en.md` / `docs/fr.md`, kept in sync.
+- **User-facing text** exists in English, French, German ("du") and Spanish
+  ("usted"): action messages, manifest texts, widget contents, feature names,
+  and `docs/en.md`, `docs/fr.md`, `docs/de.md`, `docs/es.md` with the same
+  sections. `test/i18n.test.js` enforces it.
 - **Style.** Prettier formats, ESLint catches mistakes. Comments explain why,
   in English. Tests never touch the network.
+
+## Radio Browser: what the code relies on
+
+- **API**: no key, volunteers' mirrors. Servers from the SRV records of
+  `_api._tcp.radio-browser.info` (`dns.resolveSrv`), else `/json/servers` of
+  `all.api.radio-browser.info`, else that host itself; shuffled, the next one
+  on a network error, a timeout or a 5xx (a 4xx is not retried). Explicit
+  User-Agent `gladys-radio-browser/<version> (+repo URL)`.
+- Endpoints used: `/json/stations/search` (`hidebroken=true`,
+  `order=clickcount&reverse=true`, or `order=random`; `countrycode` for two
+  letters, else `country`; `tag` and `language` lowercased — the API matches
+  them case sensitive on lowercase values), `/json/stations/byuuid?uuids=a,b`
+  (one request for every favorite per refresh), `/json/url/{uuid}` (the click,
+  counted once a day per IP: sent by the scene actions only, never by a
+  refresh). `"ok"` of the click answer is a boolean or the string `"true"`.
+- The directory lists the same stream several times: searches keep one per
+  stream (most votes, then clicks), as python-radios does.
+- `lastcheckok` is the directory's own check, about daily: the `online`
+  feature says so, it is not a live check. A favorite missing from a byuuid
+  answer is marked `missing` and reported offline.
+- Station uuids end up in external ids: anything that is not a plain uuid is
+  dropped by `normalizeStation`.
+
+## Pièges découverts sur cette intégration
+
+- **Aucune intégration ne peut commander l'appareil d'une autre** (vérifié sur
+  `v5.2.1`) : l'API hôte n'a pas d'équivalent de `device.setValue` pour un
+  appareil tiers, `GET /device` ne rend que les appareils de l'intégration, et
+  un champ `source: "devices"` refuse ceux d'une autre intégration. L'action
+  du cœur `music.play-notification` ne prend qu'un **texte** (TTS via Gladys
+  Plus) ; `device.set-value` sur `music/play_notification` passe par
+  l'évaluation numérique. Et ce `play_notification` n'est pas un lecteur de
+  radio : Sonos revient à l'état précédent au bout de 20 s, AirPlay coupe à
+  5 min. Repli retenu : une action de scène qui rend `stream_url`, à passer à
+  l'action `play_url` de `guim31/gladys-dlna` par `{{0.0.stream_url}}`.
+- **Libellé d'un lien de `card-list` : 24 caractères au plus** (tronqué au-delà,
+  `validateWidgetContent` le signale) : « Écouter dans le navigateur » ne
+  passe pas.
+- **Images de widget : PNG, JPEG ou WebP seulement** ; la plupart des
+  `favicon` de stations sont des `.ico`. Vérifier une image (`validateWidgetImage`)
+  avant de mettre sa clé dans un contenu, sinon la carte montre une image
+  cassée.
+- Une adresse d'image issue d'un annuaire public ne se télécharge qu'après
+  avoir vérifié que l'hôte résout vers des adresses publiques (à chaque
+  redirection) : le conteneur est sur le réseau de l'utilisateur.
+- Le proxy des sessions de code refuse `*.api.radio-browser.info` :
+  `scripts/probe.mjs` est le test réel, à lancer depuis une machine qui a le
+  réseau.
 
 ---
 

@@ -1,177 +1,652 @@
 {
   "manifest_version": 1,
   "type": "device",
-  "name": "Demo Devices Template",
+  "name": "Radio Browser",
   "description": {
-    "en": "Starter template showing sensors, a switch, a dimmable light and a smart plug.",
-    "fr": "Template de démarrage : capteurs, interrupteur, lampe variable et prise connectée."
+    "en": "Web radios of the world from the free Radio Browser directory: favorites, logos and streams.",
+    "fr": "Les webradios du monde entier, depuis l'annuaire libre Radio Browser : favoris, logos et flux.",
+    "de": "Webradios aus aller Welt aus dem freien Radio-Browser-Verzeichnis: Favoriten, Logos, Streams.",
+    "es": "Radios web de todo el mundo del directorio libre Radio Browser: favoritos, logotipos y flujos."
   },
   "version": "1.0.0",
-  "docker_image": "ghcr.io/gladysassistant/integration-template-js:1.0.0",
+  "docker_image": "ghcr.io/guim31/gladys-radio-browser:1.0.0",
   "gladys_version": ">=5.1.0",
-  "cover_image": "https://raw.githubusercontent.com/GladysAssistant/integration-template-js/master/cover.png",
-  "categories": ["lighting", "security", "environment"],
-  "transports": ["local", "cloud"],
+  "cover_image": "https://raw.githubusercontent.com/guim31/gladys-radio-browser/main/cover.png",
+  "categories": ["multimedia"],
+  "transports": ["cloud"],
   "config_schema": [
     {
       "key": "intro",
       "type": "section",
-      "label": { "en": "Getting started", "fr": "Pour commencer" },
+      "label": {
+        "en": "Getting started",
+        "fr": "Pour commencer",
+        "de": "Erste Schritte",
+        "es": "Para empezar"
+      },
       "description": {
-        "en": "The demo weather station reads real data from the free Open-Meteo API: pick the coordinates to observe. No account, no API key.",
-        "fr": "La station météo de démonstration lit de vraies données via l'API gratuite Open-Meteo : choisissez les coordonnées à observer. Pas de compte, pas de clé d'API."
+        "en": "Radio Browser is a free directory of about 50,000 web radios, run by volunteers: no account, no key. Find a station with the \"Search a station\" action below, then add it with \"Add to favorites\" and its number. Each favorite then appears in the Discover tab: click \"Add to Gladys\". This integration is not affiliated with radio-browser.info.",
+        "fr": "Radio Browser est un annuaire libre d'environ 50 000 webradios, tenu par des bénévoles : ni compte ni clé. Trouvez une station avec l'action « Rechercher une station » ci-dessous, puis ajoutez-la avec « Ajouter aux favoris » et son numéro. Chaque favori apparaît alors dans l'onglet Découverte : cliquez sur « Ajouter à Gladys ». Cette intégration n'est pas affiliée à radio-browser.info.",
+        "de": "Radio Browser ist ein freies Verzeichnis von rund 50.000 Webradios, betrieben von Freiwilligen: kein Konto, kein Schlüssel. Finde einen Sender mit der Aktion „Sender suchen“ unten und füge ihn dann mit „Zu Favoriten hinzufügen“ und seiner Nummer hinzu. Jeder Favorit erscheint dann im Tab „Entdecken“: klicke auf „Zu Gladys hinzufügen“. Diese Integration ist nicht mit radio-browser.info verbunden.",
+        "es": "Radio Browser es un directorio libre de unas 50 000 radios web, mantenido por voluntarios: sin cuenta ni clave. Busque una emisora con la acción «Buscar una emisora» de abajo y añádala con «Añadir a favoritos» y su número. Cada favorito aparece entonces en la pestaña Descubrir: haga clic en «Añadir a Gladys». Esta integración no está afiliada a radio-browser.info."
       },
       "links": [
         {
-          "url": "https://open-meteo.com/en/docs",
-          "label": { "en": "Open-Meteo documentation", "fr": "Documentation Open-Meteo" }
+          "url": "https://www.radio-browser.info/",
+          "label": {
+            "en": "The Radio Browser directory",
+            "fr": "L'annuaire Radio Browser",
+            "de": "Das Radio-Browser-Verzeichnis",
+            "es": "El directorio Radio Browser"
+          }
         }
       ]
     },
     {
-      "key": "latitude",
-      "type": "number",
-      "label": { "en": "Latitude", "fr": "Latitude" },
-      "description": {
-        "en": "Latitude used for the demo weather sensor.",
-        "fr": "Latitude utilisée par le capteur météo de démonstration."
+      "key": "playing",
+      "type": "section",
+      "label": {
+        "en": "Playing a radio",
+        "fr": "Jouer une radio",
+        "de": "Ein Radio abspielen",
+        "es": "Reproducir una radio"
       },
-      "placeholder": { "en": "e.g. 48.8566", "fr": "ex. 48.8566" },
-      "required": true,
-      "default": 48.8566,
-      "min": -90,
-      "max": 90
+      "description": {
+        "en": "Gladys does not let an integration start the player of another integration yet. In a scene, add the \"Get the stream of a radio\" action, then the \"Play a URL\" action of your player (the DLNA integration, for example) with the stream address as URL. The documentation shows a full example.",
+        "fr": "Gladys ne permet pas encore à une intégration de lancer le lecteur d'une autre intégration. Dans une scène, ajoutez l'action « Obtenir le flux d'une radio », puis l'action « Lire une URL » de votre lecteur (l'intégration DLNA par exemple) avec l'adresse du flux comme URL. La documentation montre un exemple complet.",
+        "de": "Gladys erlaubt einer Integration noch nicht, den Player einer anderen Integration zu starten. Füge in einer Szene die Aktion „Stream eines Radios holen“ hinzu und danach die Aktion „URL abspielen“ deines Players (zum Beispiel der DLNA-Integration) mit der Stream-Adresse als URL. Die Dokumentation zeigt ein vollständiges Beispiel.",
+        "es": "Gladys todavía no permite que una integración inicie el reproductor de otra integración. En una escena, añada la acción «Obtener el flujo de una radio» y luego la acción «Reproducir una URL» de su reproductor (la integración DLNA, por ejemplo) con la dirección del flujo como URL. La documentación muestra un ejemplo completo."
+      }
     },
     {
-      "key": "longitude",
-      "type": "number",
-      "label": { "en": "Longitude", "fr": "Longitude" },
-      "description": {
-        "en": "Longitude used for the demo weather sensor.",
-        "fr": "Longitude utilisée par le capteur météo de démonstration."
-      },
-      "placeholder": { "en": "e.g. 2.3522", "fr": "ex. 2.3522" },
-      "required": true,
-      "default": 2.3522,
-      "min": -180,
-      "max": 180
-    },
-    {
-      "key": "unit",
+      "key": "language",
       "type": "select",
-      "label": { "en": "Temperature unit", "fr": "Unité de température" },
+      "label": {
+        "en": "Language of names and messages",
+        "fr": "Langue des noms et des messages",
+        "de": "Sprache der Namen und Meldungen",
+        "es": "Idioma de los nombres y mensajes"
+      },
+      "description": {
+        "en": "Names of the features of the stations added from now on (Gladys keeps them once a device is added), and error messages of the scene actions.",
+        "fr": "Noms des fonctionnalités des stations ajoutées désormais (Gladys les garde une fois l'appareil ajouté), et messages d'erreur des actions de scène.",
+        "de": "Namen der Funktionen der ab jetzt hinzugefügten Sender (Gladys behält sie, sobald ein Gerät hinzugefügt ist) und Fehlermeldungen der Szenenaktionen.",
+        "es": "Nombres de las funciones de las emisoras añadidas a partir de ahora (Gladys los conserva una vez añadido el dispositivo) y mensajes de error de las acciones de escena."
+      },
       "required": false,
-      "default": "celsius",
+      "default": "fr",
       "options": [
-        { "value": "celsius", "label": { "en": "Celsius", "fr": "Celsius" } },
-        { "value": "fahrenheit", "label": { "en": "Fahrenheit", "fr": "Fahrenheit" } }
+        {
+          "value": "en",
+          "label": {
+            "en": "English",
+            "fr": "English",
+            "de": "English",
+            "es": "English"
+          }
+        },
+        {
+          "value": "fr",
+          "label": {
+            "en": "Français",
+            "fr": "Français",
+            "de": "Français",
+            "es": "Français"
+          }
+        },
+        {
+          "value": "de",
+          "label": {
+            "en": "Deutsch",
+            "fr": "Deutsch",
+            "de": "Deutsch",
+            "es": "Deutsch"
+          }
+        },
+        {
+          "value": "es",
+          "label": {
+            "en": "Español",
+            "fr": "Español",
+            "de": "Español",
+            "es": "Español"
+          }
+        }
       ]
     },
     {
-      "key": "poll_frequency",
+      "key": "refresh_minutes",
       "type": "number",
-      "label": { "en": "Refresh interval (s)", "fr": "Intervalle de rafraîchissement (s)" },
+      "label": {
+        "en": "Refresh interval (minutes)",
+        "fr": "Intervalle de rafraîchissement (minutes)",
+        "de": "Aktualisierungsintervall (Minuten)",
+        "es": "Intervalo de actualización (minutos)"
+      },
       "description": {
-        "en": "How often sensors are polled, in seconds (one minute minimum).",
-        "fr": "Fréquence d'interrogation des capteurs, en secondes (une minute minimum)."
+        "en": "How often the favorites are read again from Radio Browser (stream check, bitrate, logo), in one request for all of them. 15 to 360 minutes: the directory checks each stream about once a day.",
+        "fr": "Fréquence de relecture des favoris dans Radio Browser (vérification du flux, débit, logo), en une seule requête pour tous. De 15 à 360 minutes : l'annuaire vérifie chaque flux environ une fois par jour.",
+        "de": "Wie oft die Favoriten erneut aus Radio Browser gelesen werden (Stream-Prüfung, Bitrate, Logo), mit einer einzigen Anfrage für alle. 15 bis 360 Minuten: das Verzeichnis prüft jeden Stream etwa einmal am Tag.",
+        "es": "Con qué frecuencia se vuelven a leer los favoritos en Radio Browser (comprobación del flujo, tasa de bits, logotipo), en una sola petición para todos. De 15 a 360 minutos: el directorio comprueba cada flujo aproximadamente una vez al día."
       },
       "required": false,
-      "default": 300,
-      "min": 60,
-      "max": 3600
+      "default": 60,
+      "min": 15,
+      "max": 360
     }
   ],
   "actions": [
     {
-      "key": "test_weather",
-      "label": { "en": "Test the weather provider", "fr": "Tester le fournisseur météo" },
-      "timeout_seconds": 30
-    },
-    {
-      "key": "identify",
-      "label": { "en": "Identify a device", "fr": "Identifier un appareil" },
-      "fields": [
-        {
-          "key": "device",
-          "type": "select",
-          "source": "devices",
-          "label": { "en": "Device", "fr": "Appareil" },
-          "required": true
-        }
-      ]
-    }
-  ],
-  "scene_triggers": [
-    {
-      "key": "motion_detected",
-      "label": { "en": "Motion detected", "fr": "Mouvement détecté" },
-      "description": {
-        "en": "A demo motion sensor saw a person or an animal move.",
-        "fr": "Un détecteur de démonstration a vu bouger une personne ou un animal."
+      "key": "search",
+      "label": {
+        "en": "Search a station",
+        "fr": "Rechercher une station",
+        "de": "Sender suchen",
+        "es": "Buscar una emisora"
       },
+      "description": {
+        "en": "Fill in one field or more. The 10 most played working stations are listed, with a number.",
+        "fr": "Remplissez un champ ou plus. Les 10 stations en état de marche les plus écoutées sont listées, avec un numéro.",
+        "de": "Fülle ein oder mehrere Felder aus. Die 10 meistgehörten funktionierenden Sender werden mit einer Nummer aufgelistet.",
+        "es": "Rellene uno o varios campos. Se muestran las 10 emisoras en funcionamiento más escuchadas, con un número."
+      },
+      "timeout_seconds": 30,
       "fields": [
         {
-          "key": "device",
-          "type": "select",
-          "source": "devices",
-          "label": { "en": "Sensor", "fr": "Détecteur" }
+          "key": "name",
+          "type": "string",
+          "label": {
+            "en": "Name (or part of it)",
+            "fr": "Nom (ou une partie)",
+            "de": "Name (oder ein Teil davon)",
+            "es": "Nombre (o una parte)"
+          },
+          "placeholder": {
+            "en": "FIP",
+            "fr": "FIP",
+            "de": "FIP",
+            "es": "FIP"
+          }
         },
         {
-          "key": "target",
-          "type": "multi_select",
-          "label": { "en": "What moved", "fr": "Ce qui a bougé" },
-          "options": [
-            { "value": "person", "label": { "en": "Person", "fr": "Personne" } },
-            { "value": "animal", "label": { "en": "Animal", "fr": "Animal" } }
-          ]
-        }
-      ],
-      "variables": [
-        {
-          "key": "target",
+          "key": "tag",
           "type": "string",
-          "label": { "en": "What moved", "fr": "Ce qui a bougé" }
+          "label": {
+            "en": "Genre",
+            "fr": "Genre",
+            "de": "Genre",
+            "es": "Género"
+          },
+          "placeholder": {
+            "en": "jazz",
+            "fr": "jazz",
+            "de": "jazz",
+            "es": "jazz"
+          }
+        },
+        {
+          "key": "country",
+          "type": "string",
+          "label": {
+            "en": "Country (name or code)",
+            "fr": "Pays (nom ou code)",
+            "de": "Land (Name oder Code)",
+            "es": "País (nombre o código)"
+          },
+          "placeholder": {
+            "en": "France or FR",
+            "fr": "France ou FR",
+            "de": "France oder FR",
+            "es": "France o FR"
+          }
+        },
+        {
+          "key": "language",
+          "type": "string",
+          "label": {
+            "en": "Language (in English)",
+            "fr": "Langue (en anglais)",
+            "de": "Sprache (auf Englisch)",
+            "es": "Idioma (en inglés)"
+          },
+          "placeholder": {
+            "en": "french",
+            "fr": "french",
+            "de": "french",
+            "es": "french"
+          }
+        }
+      ]
+    },
+    {
+      "key": "add_favorite",
+      "label": {
+        "en": "Add to favorites",
+        "fr": "Ajouter aux favoris",
+        "de": "Zu Favoriten hinzufügen",
+        "es": "Añadir a favoritos"
+      },
+      "description": {
+        "en": "The number of a result of the last search, or the identifier (UUID) of a station.",
+        "fr": "Le numéro d'un résultat de la dernière recherche, ou l'identifiant (UUID) d'une station.",
+        "de": "Die Nummer eines Ergebnisses der letzten Suche oder die Kennung (UUID) eines Senders.",
+        "es": "El número de un resultado de la última búsqueda o el identificador (UUID) de una emisora."
+      },
+      "timeout_seconds": 30,
+      "fields": [
+        {
+          "key": "station",
+          "type": "string",
+          "label": {
+            "en": "Result number or UUID",
+            "fr": "Numéro du résultat ou UUID",
+            "de": "Ergebnisnummer oder UUID",
+            "es": "Número del resultado o UUID"
+          },
+          "placeholder": {
+            "en": "1",
+            "fr": "1",
+            "de": "1",
+            "es": "1"
+          },
+          "required": true
+        },
+        {
+          "key": "name",
+          "type": "string",
+          "label": {
+            "en": "Name shown (optional)",
+            "fr": "Nom affiché (facultatif)",
+            "de": "Angezeigter Name (optional)",
+            "es": "Nombre mostrado (opcional)"
+          },
+          "description": {
+            "en": "Empty: the name of the station in the directory.",
+            "fr": "Vide : le nom de la station dans l'annuaire.",
+            "de": "Leer: der Name des Senders im Verzeichnis.",
+            "es": "Vacío: el nombre de la emisora en el directorio."
+          }
+        }
+      ]
+    },
+    {
+      "key": "list_favorites",
+      "label": {
+        "en": "List the favorites",
+        "fr": "Lister les favoris",
+        "de": "Favoriten anzeigen",
+        "es": "Ver los favoritos"
+      },
+      "description": {
+        "en": "Your favorite stations, numbered, and whether they were added to Gladys.",
+        "fr": "Vos stations favorites, numérotées, et si elles ont été ajoutées à Gladys.",
+        "de": "Deine Lieblingssender, nummeriert, und ob sie zu Gladys hinzugefügt wurden.",
+        "es": "Sus emisoras favoritas, numeradas, y si se han añadido a Gladys."
+      },
+      "timeout_seconds": 10
+    },
+    {
+      "key": "remove_favorite",
+      "label": {
+        "en": "Remove a favorite",
+        "fr": "Retirer un favori",
+        "de": "Favorit entfernen",
+        "es": "Quitar un favorito"
+      },
+      "description": {
+        "en": "Its number in \"List the favorites\", its name or its UUID. Its device stays in Gladys until you delete it.",
+        "fr": "Son numéro dans « Lister les favoris », son nom ou son UUID. Son appareil reste dans Gladys tant que vous ne le supprimez pas.",
+        "de": "Seine Nummer aus „Favoriten anzeigen“, sein Name oder seine UUID. Sein Gerät bleibt in Gladys, bis du es löschst.",
+        "es": "Su número en «Ver los favoritos», su nombre o su UUID. Su dispositivo permanece en Gladys hasta que usted lo elimine."
+      },
+      "timeout_seconds": 10,
+      "fields": [
+        {
+          "key": "station",
+          "type": "string",
+          "label": {
+            "en": "Number, name or UUID",
+            "fr": "Numéro, nom ou UUID",
+            "de": "Nummer, Name oder UUID",
+            "es": "Número, nombre o UUID"
+          },
+          "placeholder": {
+            "en": "1",
+            "fr": "1",
+            "de": "1",
+            "es": "1"
+          },
+          "required": true
         }
       ]
     }
   ],
   "scene_actions": [
     {
-      "key": "identify_device",
-      "label": { "en": "Identify a device", "fr": "Identifier un appareil" },
-      "description": {
-        "en": "Make a device signal itself (the demo light blinks).",
-        "fr": "Fait se signaler un appareil (la lampe de démonstration clignote)."
+      "key": "get_stream",
+      "label": {
+        "en": "Get the stream of a radio",
+        "fr": "Obtenir le flux d'une radio",
+        "de": "Stream eines Radios holen",
+        "es": "Obtener el flujo de una radio"
       },
-      "timeout_seconds": 15,
+      "description": {
+        "en": "For the next action: the \"Play a URL\" action of a player. Counts a listen in Radio Browser.",
+        "fr": "Pour l'action suivante : l'action « Lire une URL » d'un lecteur. Compte une écoute dans Radio Browser.",
+        "de": "Für die nächste Aktion: die Aktion „URL abspielen“ eines Players. Zählt ein Anhören in Radio Browser.",
+        "es": "Para la acción siguiente: la acción «Reproducir una URL» de un reproductor. Cuenta una escucha en Radio Browser."
+      },
+      "timeout_seconds": 20,
       "fields": [
         {
-          "key": "device",
+          "key": "station",
           "type": "select",
           "source": "devices",
-          "label": { "en": "Device", "fr": "Appareil" },
+          "label": {
+            "en": "Station",
+            "fr": "Station",
+            "de": "Sender",
+            "es": "Emisora"
+          },
           "required": true
         }
       ],
       "outputs": [
         {
-          "key": "signalled",
+          "key": "stream_url",
+          "type": "string",
+          "label": {
+            "en": "Stream address",
+            "fr": "Adresse du flux",
+            "de": "Stream-Adresse",
+            "es": "Dirección del flujo"
+          },
+          "description": {
+            "en": "The address to give to the player's \"Play a URL\" action.",
+            "fr": "L'adresse à donner à l'action « Lire une URL » du lecteur.",
+            "de": "Die Adresse für die Aktion „URL abspielen“ des Players.",
+            "es": "La dirección que debe indicar en la acción «Reproducir una URL» del reproductor."
+          }
+        },
+        {
+          "key": "name",
+          "type": "string",
+          "label": {
+            "en": "Station name",
+            "fr": "Nom de la station",
+            "de": "Sendername",
+            "es": "Nombre de la emisora"
+          }
+        },
+        {
+          "key": "codec",
+          "type": "string",
+          "label": {
+            "en": "Codec",
+            "fr": "Codec",
+            "de": "Codec",
+            "es": "Códec"
+          }
+        },
+        {
+          "key": "bitrate",
+          "type": "number",
+          "label": {
+            "en": "Bitrate (kbit/s)",
+            "fr": "Débit (kbit/s)",
+            "de": "Bitrate (kbit/s)",
+            "es": "Tasa de bits (kbit/s)"
+          }
+        },
+        {
+          "key": "online",
           "type": "boolean",
-          "label": { "en": "Device signalled", "fr": "Appareil signalé" }
+          "label": {
+            "en": "Stream online",
+            "fr": "Flux en ligne",
+            "de": "Stream online",
+            "es": "Flujo en línea"
+          },
+          "description": {
+            "en": "The last check of the stream by Radio Browser succeeded.",
+            "fr": "La dernière vérification du flux par Radio Browser a réussi.",
+            "de": "Die letzte Prüfung des Streams durch Radio Browser war erfolgreich.",
+            "es": "La última comprobación del flujo por Radio Browser fue correcta."
+          }
+        },
+        {
+          "key": "hls",
+          "type": "boolean",
+          "label": {
+            "en": "HLS stream (.m3u8)",
+            "fr": "Flux HLS (.m3u8)",
+            "de": "HLS-Stream (.m3u8)",
+            "es": "Flujo HLS (.m3u8)"
+          },
+          "description": {
+            "en": "Many network players cannot play HLS streams.",
+            "fr": "Beaucoup de lecteurs réseau ne savent pas lire les flux HLS.",
+            "de": "Viele Netzwerkplayer können keine HLS-Streams abspielen.",
+            "es": "Muchos reproductores de red no pueden reproducir flujos HLS."
+          }
+        }
+      ]
+    },
+    {
+      "key": "random_station",
+      "label": {
+        "en": "Pick a random radio",
+        "fr": "Choisir une radio au hasard",
+        "de": "Zufälliges Radio wählen",
+        "es": "Elegir una radio al azar"
+      },
+      "description": {
+        "en": "A random working station of a genre, a country or a language, for the \"Play a URL\" action of a player.",
+        "fr": "Une station en état de marche au hasard, d'un genre, d'un pays ou d'une langue, pour l'action « Lire une URL » d'un lecteur.",
+        "de": "Ein zufälliger funktionierender Sender eines Genres, Landes oder einer Sprache, für die Aktion „URL abspielen“ eines Players.",
+        "es": "Una emisora en funcionamiento al azar, de un género, un país o un idioma, para la acción «Reproducir una URL» de un reproductor."
+      },
+      "timeout_seconds": 20,
+      "fields": [
+        {
+          "key": "tag",
+          "type": "string",
+          "label": {
+            "en": "Genre",
+            "fr": "Genre",
+            "de": "Genre",
+            "es": "Género"
+          },
+          "placeholder": {
+            "en": "jazz",
+            "fr": "jazz",
+            "de": "jazz",
+            "es": "jazz"
+          }
+        },
+        {
+          "key": "country",
+          "type": "string",
+          "label": {
+            "en": "Country (name or code)",
+            "fr": "Pays (nom ou code)",
+            "de": "Land (Name oder Code)",
+            "es": "País (nombre o código)"
+          },
+          "placeholder": {
+            "en": "France or FR",
+            "fr": "France ou FR",
+            "de": "France oder FR",
+            "es": "France o FR"
+          }
+        },
+        {
+          "key": "language",
+          "type": "string",
+          "label": {
+            "en": "Language (in English)",
+            "fr": "Langue (en anglais)",
+            "de": "Sprache (auf Englisch)",
+            "es": "Idioma (en inglés)"
+          },
+          "placeholder": {
+            "en": "french",
+            "fr": "french",
+            "de": "french",
+            "es": "french"
+          }
+        }
+      ],
+      "outputs": [
+        {
+          "key": "stream_url",
+          "type": "string",
+          "label": {
+            "en": "Stream address",
+            "fr": "Adresse du flux",
+            "de": "Stream-Adresse",
+            "es": "Dirección del flujo"
+          },
+          "description": {
+            "en": "The address to give to the player's \"Play a URL\" action.",
+            "fr": "L'adresse à donner à l'action « Lire une URL » du lecteur.",
+            "de": "Die Adresse für die Aktion „URL abspielen“ des Players.",
+            "es": "La dirección que debe indicar en la acción «Reproducir una URL» del reproductor."
+          }
+        },
+        {
+          "key": "name",
+          "type": "string",
+          "label": {
+            "en": "Station name",
+            "fr": "Nom de la station",
+            "de": "Sendername",
+            "es": "Nombre de la emisora"
+          }
+        },
+        {
+          "key": "codec",
+          "type": "string",
+          "label": {
+            "en": "Codec",
+            "fr": "Codec",
+            "de": "Codec",
+            "es": "Códec"
+          }
+        },
+        {
+          "key": "bitrate",
+          "type": "number",
+          "label": {
+            "en": "Bitrate (kbit/s)",
+            "fr": "Débit (kbit/s)",
+            "de": "Bitrate (kbit/s)",
+            "es": "Tasa de bits (kbit/s)"
+          }
+        },
+        {
+          "key": "online",
+          "type": "boolean",
+          "label": {
+            "en": "Stream online",
+            "fr": "Flux en ligne",
+            "de": "Stream online",
+            "es": "Flujo en línea"
+          },
+          "description": {
+            "en": "The last check of the stream by Radio Browser succeeded.",
+            "fr": "La dernière vérification du flux par Radio Browser a réussi.",
+            "de": "Die letzte Prüfung des Streams durch Radio Browser war erfolgreich.",
+            "es": "La última comprobación del flujo por Radio Browser fue correcta."
+          }
+        },
+        {
+          "key": "hls",
+          "type": "boolean",
+          "label": {
+            "en": "HLS stream (.m3u8)",
+            "fr": "Flux HLS (.m3u8)",
+            "de": "HLS-Stream (.m3u8)",
+            "es": "Flujo HLS (.m3u8)"
+          },
+          "description": {
+            "en": "Many network players cannot play HLS streams.",
+            "fr": "Beaucoup de lecteurs réseau ne savent pas lire les flux HLS.",
+            "de": "Viele Netzwerkplayer können keine HLS-Streams abspielen.",
+            "es": "Muchos reproductores de red no pueden reproducir flujos HLS."
+          }
         }
       ]
     }
   ],
   "widgets": [
     {
-      "key": "demo_status",
-      "label": { "en": "Demo status", "fr": "État de la démo" },
-      "description": {
-        "en": "Live temperature and plug power, plug connection and observed location.",
-        "fr": "Température et puissance en direct, connexion de la prise, position observée."
+      "key": "favorites",
+      "label": {
+        "en": "Favorite radios",
+        "fr": "Radios favorites",
+        "de": "Lieblingsradios",
+        "es": "Radios favoritas"
       },
-      "icon": "activity",
-      "action_timeout_seconds": 15
+      "description": {
+        "en": "Your favorite web radios with their logo, country, codec and stream state.",
+        "fr": "Vos webradios favorites avec leur logo, pays, codec et état du flux.",
+        "de": "Deine Lieblings-Webradios mit Logo, Land, Codec und Stream-Status.",
+        "es": "Sus radios web favoritas con su logotipo, país, códec y estado del flujo."
+      },
+      "icon": "radio",
+      "settings": [
+        {
+          "key": "stations",
+          "type": "multi_select",
+          "source": "devices",
+          "label": {
+            "en": "Stations shown",
+            "fr": "Stations affichées",
+            "de": "Angezeigte Sender",
+            "es": "Emisoras mostradas"
+          },
+          "description": {
+            "en": "Empty: every favorite, 12 at most.",
+            "fr": "Vide : tous les favoris, 12 au plus.",
+            "de": "Leer: alle Favoriten, höchstens 12.",
+            "es": "Vacío: todos los favoritos, 12 como máximo."
+          },
+          "required": false
+        },
+        {
+          "key": "display",
+          "type": "select",
+          "label": {
+            "en": "Display",
+            "fr": "Affichage",
+            "de": "Darstellung",
+            "es": "Visualización"
+          },
+          "required": false,
+          "default": "grid",
+          "options": [
+            {
+              "value": "grid",
+              "label": {
+                "en": "Logo grid",
+                "fr": "Grille de logos",
+                "de": "Logo-Raster",
+                "es": "Cuadrícula de logotipos"
+              }
+            },
+            {
+              "value": "list",
+              "label": {
+                "en": "List (8 at most)",
+                "fr": "Liste (8 au plus)",
+                "de": "Liste (höchstens 8)",
+                "es": "Lista (8 como máximo)"
+              }
+            }
+          ]
+        }
+      ]
     }
   ]
 }

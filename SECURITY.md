@@ -30,6 +30,23 @@ Gladys before reporting a problem.
 
 In scope: the code of this repository and the Docker image it publishes.
 
+What the integration handles:
+
+- **Stored in `/data`**: `favorites.json`, the favorite stations with their
+  last known details as published by the public Radio Browser directory
+  (names, stream, website and logo addresses). No account, password, token or
+  key exists: the directory is public and free.
+- **Network**: HTTPS requests to the Radio Browser API servers (found by DNS),
+  and downloads of the station logos from the stations' own websites. A logo
+  address comes from a directory anyone can edit: before a download, its host
+  must resolve to public addresses only (checked again on every redirect), the
+  size is capped at 300 KB, and only the logos of the current favorites are
+  ever fetched — so a station cannot make the container query the user's
+  router or NAS. A host that changes its DNS answer between the check and the
+  download (DNS rebinding) is not covered.
+- **Logs**: never a full stream or logo address (they may carry a listener
+  token): the server name only.
+
 Out of scope: Gladys Assistant itself (see its
 [security policy](https://github.com/GladysAssistant/Gladys/security/policy)),
-and the third-party services and devices the integration talks to.
+the Radio Browser directory and the radio streams themselves.
