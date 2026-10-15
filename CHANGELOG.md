@@ -10,6 +10,8 @@ the notes of the version's GitHub Release.
 
 ## [Unreleased]
 
+## [1.0.1] - 2026-10-15
+
 ### Added
 
 - Search the Radio Browser directory of web radios (name, country, language,
@@ -28,4 +30,5 @@ the notes of the version's GitHub Release.
 - English, French, German and Spanish, in the configuration, the messages,
   the widget, the feature names and the documentation.
 
-[Unreleased]: https://github.com/guim31/gladys-radio-browser/commits/main
+[Unreleased]: https://github.com/guim31/gladys-radio-browser/compare/v1.0.1...HEAD
+[1.0.1]: https://github.com/guim31/gladys-radio-browser/releases/tag/v1.0.1

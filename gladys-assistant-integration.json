@@ -8,8 +8,8 @@
     "de": "Webradios aus aller Welt aus dem freien Radio-Browser-Verzeichnis: Favoriten, Logos, Streams.",
     "es": "Radios web de todo el mundo del directorio libre Radio Browser: favoritos, logotipos y flujos."
   },
-  "version": "1.0.0",
-  "docker_image": "ghcr.io/guim31/gladys-radio-browser:1.0.0",
+  "version": "1.0.1",
+  "docker_image": "ghcr.io/guim31/gladys-radio-browser:1.0.1",
   "gladys_version": ">=5.1.0",
   "cover_image": "https://raw.githubusercontent.com/guim31/gladys-radio-browser/main/cover.png",
   "categories": ["multimedia"],
