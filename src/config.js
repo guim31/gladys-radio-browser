@@ -1,30 +1,27 @@
 // -----------------------------------------------------------------------------
 // Integration configuration.
 //
-// The configuration is filled in by the user in Gladys, from the `config_schema`
-// declared in `gladys-assistant-integration.json`. The SDK fetches it for you
-// (`gladys.getConfig()`) and notifies you of every change through
-// `gladys.onConfigUpdated()`.
-//
-// This module only provides defaults and normalizes the received object, so the
-// rest of the code never has to deal with `undefined`.
+// Filled in by the user from the manifest `config_schema`; fetched with
+// `gladys.getConfig()` and pushed again through `gladys.onConfigUpdated()`.
+// This module only provides the defaults and normalizes what arrives.
 // -----------------------------------------------------------------------------
 
-// Defaults: they MUST stay consistent with the `default` values declared in the
-// `config_schema` of the manifest.
+import { LANGUAGES } from './i18n.js';
+
+// Bounds of the refresh interval, in minutes. The slowest pace keeps the
+// heartbeat promise: an unchanged value is sent again at least every
+// STATE_HEARTBEAT_MS + one period (12 h), so Gladys never shows "no recent
+// value" on a station that simply did not change.
+export const REFRESH_MINUTES_MIN = 15;
+export const REFRESH_MINUTES_MAX = 360;
+
+// MUST stay consistent with the `default` values of the manifest config_schema.
 export const DEFAULT_CONFIG = {
-  latitude: 48.8566, // Paris
-  longitude: 2.3522,
-  unit: 'celsius', // 'celsius' | 'fahrenheit'
-  // Seconds between two reads of the polled sensors. Gladys polls at most once
-  // a minute: slower intervals are applied by skipping polls (see
-  // createPoller in src/devices/index.js).
-  poll_frequency: 300,
-  // Reserved key (NOT in config_schema): because the manifest declares both
-  // 'local' and 'cloud' in its `transports` field, Gladys shows a standard
-  // "Prefer the local connection" toggle and sends the user's choice here.
-  // Read-only for the integration; defaults to true.
-  GLADYS_PREFER_LOCAL: true,
+  // Language of the feature names published at discovery and of the errors
+  // thrown to scene actions: a "device" integration never learns the user's.
+  language: 'fr',
+  // Minutes between two reads of the favorites in the Radio Browser directory.
+  refresh_minutes: 60,
 };
 
 /**
@@ -32,14 +29,18 @@ export const DEFAULT_CONFIG = {
  * @param {Record<string, unknown>} raw config returned by the SDK
  */
 export function normalizeConfig(raw = {}) {
+  const config = raw ?? {};
+  const minutes = Math.round(Number(config.refresh_minutes));
   return {
     ...DEFAULT_CONFIG,
-    ...raw,
-    // Force the types: config may arrive as strings from a form.
-    latitude: Number(raw.latitude ?? DEFAULT_CONFIG.latitude),
-    longitude: Number(raw.longitude ?? DEFAULT_CONFIG.longitude),
-    poll_frequency: Number(raw.poll_frequency ?? DEFAULT_CONFIG.poll_frequency),
-    // The preference is a boolean; anything but an explicit false means true.
-    GLADYS_PREFER_LOCAL: raw.GLADYS_PREFER_LOCAL !== false,
+    language: LANGUAGES.includes(config.language) ? config.language : DEFAULT_CONFIG.language,
+    refresh_minutes: Number.isFinite(minutes)
+      ? Math.min(REFRESH_MINUTES_MAX, Math.max(REFRESH_MINUTES_MIN, minutes))
+      : DEFAULT_CONFIG.refresh_minutes,
   };
+}
+
+/** The refresh period of a normalized config, in milliseconds. */
+export function refreshPeriodMs(config) {
+  return config.refresh_minutes * 60 * 1000;
 }
