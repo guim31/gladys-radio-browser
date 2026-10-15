@@ -157,3 +157,19 @@ test('no stream address and no logo address ever reaches the logs', async (t) =>
   assert.ok(lines.length > 0);
   assert.doesNotMatch(all, /s3cr3t|hunter2|fip-hifi\.aac|icecast\.radiofrance\.fr/);
 });
+
+test('a /data that cannot be written is reported once, the states still go out', async (t) => {
+  withLogLevel(t, 'info');
+  const { gladys, app, directory, store } = await setupApp(t, { favorites: [FIP] });
+  t.mock.method(store, 'save', async () => {
+    throw Object.assign(new Error('read-only file system'), { code: 'EROFS' });
+  });
+  const lines = captureLogs(t);
+  directory.stations.find((s) => s.stationuuid === FIP).bitrate = 256;
+  await app.refresher.refresh({ force: true });
+  directory.stations.find((s) => s.stationuuid === FIP).bitrate = 320;
+  await app.refresher.refresh({ force: true });
+  assert.equal(lines.filter((l) => l.includes('[WARN]')).length, 1, lines.join('\n'));
+  assert.match(lines[0], /EROFS/);
+  assert.equal(gladys.fake.lastState(id(FIP, 'bitrate')), 320);
+});

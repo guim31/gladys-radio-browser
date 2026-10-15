@@ -107,7 +107,15 @@ export function createRefresher({
     }
     issues.ok('api', 'Radio Browser is reachable again');
     await setReachable(true);
-    const change = await store.update(stations);
+    let change;
+    try {
+      change = await store.update(stations);
+      issues.ok('save', 'The favorites are saved again');
+    } catch (err) {
+      // The copies in memory are fresh: only the file lags behind.
+      issues.fail('save', `Favorites not saved in /data (${err.code ?? err.message})`);
+      change = { changed: true, metadataChanged: false };
+    }
     logger.debug(`${stations.length}/${favorites.length} favorite(s) read from Radio Browser`);
     if (change.changed) {
       await onChanged(change).catch((err) =>
