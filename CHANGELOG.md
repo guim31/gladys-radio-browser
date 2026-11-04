@@ -10,6 +10,8 @@ the notes of the version's GitHub Release.
 
 ## [Unreleased]
 
+## [1.0.2] - 2026-11-04
+
 ### Changed
 
 - Documentation: to play the radios on speakers (Google Cast, Sonos, UPnP/DLNA), a link to the
@@ -35,5 +37,6 @@ the notes of the version's GitHub Release.
 - English, French, German and Spanish, in the configuration, the messages,
   the widget, the feature names and the documentation.
 
-[Unreleased]: https://github.com/guim31/gladys-radio-browser/compare/v1.0.1...HEAD
+[Unreleased]: https://github.com/guim31/gladys-radio-browser/compare/v1.0.2...HEAD
+[1.0.2]: https://github.com/guim31/gladys-radio-browser/compare/v1.0.1...v1.0.2
 [1.0.1]: https://github.com/guim31/gladys-radio-browser/releases/tag/v1.0.1
