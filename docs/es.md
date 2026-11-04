@@ -5,6 +5,10 @@ Las radios web de todo el mundo en Gladys, desde
 50 000 emisoras mantenido por voluntarios. Esta integración no está afiliada
 a radio-browser.info.
 
+**Para escuchar las radios en sus altavoces** (Google Cast, Sonos, UPnP/DLNA),
+consulte [RadioPlayer](https://github.com/gboulvin/Gladys-RadioPlayer): esta integración recorre el directorio, no
+reproduce las emisiones.
+
 ## Qué hace la integración
 
 - **Buscar** en el directorio por nombre, país, idioma o género, desde la

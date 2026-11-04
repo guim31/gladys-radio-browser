@@ -5,6 +5,10 @@ Web radios of the whole world in Gladys, from
 50,000 stations run by volunteers. This integration is not affiliated with
 radio-browser.info.
 
+**To play the radios on your speakers** (Google Cast, Sonos, UPnP/DLNA), see
+[RadioPlayer](https://github.com/gboulvin/Gladys-RadioPlayer): this integration browses the directory, it does not play
+the streams.
+
 ## What it does
 
 - **Search** the directory by name, country, language or genre, from the
