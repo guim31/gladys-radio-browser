@@ -5,6 +5,10 @@ Webradios aus aller Welt in Gladys, aus
 von rund 50.000 Sendern, das von Freiwilligen betrieben wird. Diese
 Integration ist nicht mit radio-browser.info verbunden.
 
+**Um die Sender auf deinen Lautsprechern zu hören** (Google Cast, Sonos,
+UPnP/DLNA), nimm [RadioPlayer](https://github.com/gboulvin/Gladys-RadioPlayer): Diese Integration durchsucht das
+Verzeichnis, sie spielt die Streams nicht ab.
+
 ## Was die Integration macht
 
 - **Suchen** im Verzeichnis nach Name, Land, Sprache oder Genre, im Tab

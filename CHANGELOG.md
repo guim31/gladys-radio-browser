@@ -10,6 +10,11 @@ the notes of the version's GitHub Release.
 
 ## [Unreleased]
 
+### Changed
+
+- Documentation: to play the radios on speakers (Google Cast, Sonos, UPnP/DLNA), a link to the
+  RadioPlayer integration; this one browses the directory.
+
 ## [1.0.1] - 2026-10-15
 
 ### Added
